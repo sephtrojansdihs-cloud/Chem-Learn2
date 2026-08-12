@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chem & Learn</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+    margin:0;
+    background:linear-gradient(135deg,#d7f3ff,#ffffff);
+    text-align:center;
+}
+
+h1{
+    background:#1565C0;
+    color:white;
+    padding:20px;
+    margin:0;
+}
+
+.container{
+    width:90%;
+    max-width:700px;
+    margin:30px auto;
+    background:white;
+    border-radius:15px;
+    padding:30px;
+    box-shadow:0 5px 15px rgba(0,0,0,.2);
+}
+
+.info{
+    display:flex;
+    justify-content:space-around;
+    margin-bottom:25px;
+    font-size:22px;
+    font-weight:bold;
+}
+
+.symbol{
+    font-size:90px;
+    color:#0D47A1;
+    font-weight:bold;
+    margin:20px;
+}
+
+input{
+    width:80%;
+    padding:15px;
+    font-size:22px;
+    text-align:center;
+    border-radius:10px;
+    border:2px solid #1976D2;
+}
+
+button{
+    margin-top:20px;
+    padding:12px 30px;
+    font-size:20px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+}
+
+#submitBtn{
+    background:#1976D2;
+    color:white;
+}
+
+#restartBtn{
+    background:#2E7D32;
+    color:white;
+}
+
+button:hover{
+    opacity:.9;
+}
+
+#message{
+    font-size:24px;
+    font-weight:bold;
+    margin-top:20px;
+    height:35px;
+}
+
+.correct{
+    color:green;
+}
+
+.wrong{
+    color:red;
+}
+
+#gameOver{
+    font-size:30px;
+    color:#C62828;
+    margin-top:20px;
+    font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🧪 Identify the Element Name</h1>
+<h2><<< Moderate Round >>></h2>
+
+
+<div class="container">
+
+<div class="info">
+<div>⏱ Time: <span id="timer">90</span>s</div>
+<div>⭐ Score: <span id="score">0</span></div>
+</div>
+
+<h2>Type the name of the element.</h2>
+
+<div class="symbol" id="symbol"></div>
+
+<input
+type="text"
+id="answer"
+placeholder="Type your answer here..."
+autocomplete="off">
+
+<br>
+
+<button id="submitBtn">Submit</button>
+
+<div id="message"></div>
+
+<div id="gameOver"></div>
+
+<br>
+
+<button id="restartBtn">Restart Game</button>
+
+</div>
+
+<script>
+
+const questions=[
+{name:"Lithium",symbol:"Li"},
+{name:"Beryllium",symbol:"Be"},
+{name:"Boron",symbol:"B"},
+{name:"Fluorine",symbol:"F"},
+{name:"Neon",symbol:"Ne"},
+{name:"Argon",symbol:"Ar"},
+{name:"Titanium",symbol:"Ti"},
+{name:"Chromium",symbol:"Cr"},
+{name:"Manganese",symbol:"Mn"},
+{name:"Cobalt",symbol:"Co"},
+{name:"Nickel",symbol:"Ni"},
+{name:"Bromine",symbol:"Br"},
+{name:"Krypton",symbol:"Kr"},
+{name:"Rubidium",symbol:"Rb"},
+{name:"Strontium",symbol:"Sr"},
+{name:"Tin",symbol:"Sn"},
+{name:"Iodine",symbol:"I"},
+{name:"Xenon",symbol:"Xe"},
+{name:"Lead",symbol:"Pb"},
+{name:"Barium",symbol:"Ba"}
+];
+
+let score=0;
+let timer=90;
+let currentQuestion=null;
+let gameEnded=false;
+
+const symbol=document.getElementById("symbol");
+const answer=document.getElementById("answer");
+const message=document.getElementById("message");
+
+function randomQuestion(){
+
+currentQuestion=questions[Math.floor(Math.random()*questions.length)];
+
+symbol.innerHTML=currentQuestion.symbol;
+
+answer.value="";
+answer.focus();
+
+}
+
+function checkAnswer(){
+
+if(gameEnded) return;
+
+let user=answer.value.trim().toLowerCase();
+
+if(user===currentQuestion.name.toLowerCase()){
+
+score+=2;
+
+message.innerHTML="✅ Correct! +2 Points";
+message.className="correct";
+
+}else{
+
+message.innerHTML="❌ Correct Answer: "+currentQuestion.name;
+message.className="wrong";
+
+}
+
+document.getElementById("score").innerHTML=score;
+
+setTimeout(function(){
+
+message.innerHTML="";
+randomQuestion();
+
+},700);
+
+}
+
+document.getElementById("submitBtn").onclick=checkAnswer;
+
+answer.addEventListener("keypress",function(e){
+
+if(e.key==="Enter"){
+
+checkAnswer();
+
+}
+
+});
+
+function countdown(){
+
+const interval=setInterval(function(){
+
+if(gameEnded){
+
+clearInterval(interval);
+
+return;
+
+}
+
+timer--;
+
+document.getElementById("timer").innerHTML=timer;
+
+if(timer<=0){
+
+gameEnded=true;
+
+clearInterval(interval);
+
+symbol.innerHTML="🏁";
+
+document.getElementById("gameOver").innerHTML=
+"Time's Up!<br><br>Your Final Score: <b>"+score+"</b>";
+
+answer.disabled=true;
+document.getElementById("submitBtn").disabled=true;
+
+}
+
+},1000);
+
+}
+
+document.getElementById("restartBtn").onclick=function(){
+
+score=0;
+timer=90;
+gameEnded=false;
+
+document.getElementById("score").innerHTML=0;
+document.getElementById("timer").innerHTML=90;
+document.getElementById("gameOver").innerHTML="";
+message.innerHTML="";
+
+answer.disabled=false;
+document.getElementById("submitBtn").disabled=false;
+
+randomQuestion();
+
+countdown();
+
+}
+
+randomQuestion();
+countdown();
+
+</script>
+
+</body>
+</html>
