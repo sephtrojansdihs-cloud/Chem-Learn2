@@ -144,6 +144,14 @@ autocomplete="off">
 
 <script>
 
+const correctSound = new Audio("check.mp3");
+const wrongSound = new Audio("wrong.mp3");
+
+function playSound(audio) {
+    audio.currentTime = 0;
+    audio.play().catch(() => {});
+}
+
 const questions=[
 {name:"Lithium",symbol:"Li"},
 {name:"Beryllium",symbol:"Be"},
@@ -197,11 +205,14 @@ if(user===currentQuestion.name.toLowerCase()){
 
 score+=2;
 
+playSound(correctSound);
+
 message.innerHTML="✅ Correct! +2 Points";
 message.className="correct";
 
 }else{
 
+playSound(wrongSound);
 message.innerHTML="❌ Correct Answer: "+currentQuestion.name;
 message.className="wrong";
 
